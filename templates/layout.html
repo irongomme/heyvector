@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  {% block head %}
+  <!-- Standard Meta -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <!-- Site Properties -->
+  <title>Hey Vector</title>
+  <link rel="stylesheet" type="text/css" href="/static/css/semantic/semantic.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+  <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+  <script src="/static/css/semantic/semantic.min.js"></script>
+  <script>
+  $(document)
+    .ready(function() {
+      // fix menu when passed
+      $('.masthead')
+        .visibility({
+          once: false,
+          onBottomPassed: function() {
+            $('.fixed.menu').transition('fade in');
+          },
+          onBottomPassedReverse: function() {
+            $('.fixed.menu').transition('fade out');
+          }
+        })
+      ;
+
+      // create sidebar and attach to menu open
+      $('.ui.sidebar')
+        .sidebar('attach events', '.toc.item')
+      ;
+
+      $('.ui.dropdown')
+          .dropdown()
+        ;
+
+    })
+  ;
+  </script>
+  {% endblock %}
+</head>
+<body>
+
+<!-- Following Menu -->
+<div class="ui large top fixed hidden menu">
+  <div class="ui container">
+      <a class="{% if request.path == url_for('index') %}active {% endif %}item" href="{{ url_for('index') }}">
+          <i class="icon home"></i>
+      </a>
+      <a class="{% if request.path == url_for('explore') %}active {% endif %}item" href="{{ url_for('explore') }}">
+          <i class="icon search"></i> Explore
+      </a>
+      {% if is_authenticated %}
+      <a class="{% if request.path == url_for('share') %}active {% endif %}item" href="{{ url_for('share') }}">
+          <i class="icon share alternate"></i> Share
+      </a>
+      {% endif %}
+    {% if user and user.id %}
+    <div class="right ui dropdown item">
+      <div class="text">
+        <img class="ui avatar image" src="{{ user.avatar_url }}">
+        {{ user.login }}
+      </div>
+      <i class="dropdown icon"></i>
+      <div class="ui vertical menu">
+          <a class="item" href="{{ url_for('auth.logout') }}">
+              <i class="sign-out icon"></i> Sign out
+          </a>
+      </div>
+    </div>
+    {% else %}
+    <div class="right item">
+        <a class="ui labeled icon primary button" href="{{ url_for('auth.login') }}">
+            <i class="github large icon"></i> Sign in
+        </a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Sidebar Menu -->
+<div class="ui vertical inverted sidebar menu">
+  <a class="active item" href="{{ url_for('index') }}">Home</a>
+  <a class="item href="{{ url_for('explore') }}"">Explore</a>
+  {% if is_authenticated %}
+  <a class="item" href="{{ url_for('share') }}">Share</a>
+  {% endif %}
+  {% if user and user.id %}
+   <a class="item" href="{{ url_for('auth.logout') }}">Sign out</a>
+  {% else %}
+  <a class="item" href="{{ url_for('auth.login') }}">Sign in</a>
+  {% endif %}
+</div>
+
+
+<!-- Page Contents -->
+<div class="pusher">
+  <div class="ui inverted vertical{% if request.path == url_for('index') %} masthead{% endif %} center aligned segment">
+
+    <div class="ui container">
+      <div class="ui large secondary inverted pointing menu">
+        <a class="toc item">
+          <i class="sidebar icon"></i>
+        </a>
+        <a class="{% if request.path == url_for('index') %}active {% endif %}item" href="{{ url_for('index') }}">
+            <i class="icon home"></i>
+        </a>
+        <a class="{% if request.path == url_for('explore') %}active {% endif %}item" href="{{ url_for('explore') }}">
+            <i class="icon search"></i> Explore
+        </a>
+        {% if is_authenticated %}
+        <a class="{% if request.path == url_for('share') %}active {% endif %}item" href="{{ url_for('share') }}">
+            <i class="icon share alternate"></i> Share
+        </a>
+        {% endif %}
+        {% if is_authenticated %}
+        <div class="right ui dropdown item">
+          <div class="text">
+            <img class="ui avatar image" src="{{ user.avatar_url }}">
+            {{ user.login }}
+          </div>
+          <i class="dropdown icon"></i>
+          <div class="ui vertical menu">
+              <a class="item" href="{{ url_for('auth.logout') }}">
+                  <i class="sign-out icon"></i> Sign out
+              </a>
+          </div>
+        </div>
+        {% else %}
+        <div class="right item">
+            <a class="ui labeled icon primary button" href="{{ url_for('auth.login') }}">
+                <i class="github large icon"></i> Sign in
+            </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% block content_top %}{% endblock %}
+  </div>
+
+  {% block content %}
+  {% endblock %}
+
+  <div class="ui inverted vertical footer segment">
+    <div class="ui container">
+      {% block footer %}
+      <div class="ui stackable inverted divided equal height stackable grid">
+        <div class="seven wide column">
+            <h4 class="ui inverted header">Links</h4>
+            <div class="ui inverted link list">
+              <a href="https://developer.anki.com/vector/docs/api.html" class="item">
+                  <i class="bookmark icon"></i> Vector SDK documentation
+              </a>
+              <a href="https://github.com/irongomme/heyvector" class="item">
+                  <i class="github alternate icon"></i> Github source
+              </a>
+            </div>
+        </div>
+      </div>
+      {% endblock %}
+    </div>
+  </div>
+</div>
+
+</body>
+
+</html>

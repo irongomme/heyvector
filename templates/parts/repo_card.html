@@ -1,0 +1,28 @@
+<div class="ui card">
+    <div class="content">
+        <img class="right floated mini ui image" src="{{ repo.owner.avatar_url }}">
+        <div class="header">
+            {{ repo.name }}
+        </div>
+        <div class="meta">
+            {{ repo.full_name }}
+        </div>
+        <div class="description">
+            {{ repo.description }}
+        </div>
+    </div>
+    <div class="extra content">
+      <span>
+        <i class="star icon"></i>
+        {{ repo.stargazers_count }} Stars
+      </span>
+      <span>
+        <i class="eye icon"></i>
+        {{ repo.watchers_count }} Watchers
+      </span>
+    </div>
+    <a class="ui bottom attached primary button">
+        <i class="upload icon"></i>
+        import
+    </a>
+</div>
