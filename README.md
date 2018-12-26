@@ -30,10 +30,22 @@ $ cd heyvector
 $ pip3 install -r requirements.txt --user
 ```
 
+Configure your app :
+
+```
+$ cp settings.cfg.tmpl settings.cfg
+```
+
+Then edit settings.cfg to put your own values :
+
+  - SECRET_KEY : Flask encryption string
+  - GITHUB_CLIENT_ID : ID for your github app to handle login
+  - GITHUB_CLIENT_SECRET : Secret for you github app
+
 Run the local development server :
 
 ```
-$ python -m flask run --debugger --reload
+$ python3 -m flask run --debugger --reload
 ```
 
 Finaly visit http://127.0.0.1:5000
