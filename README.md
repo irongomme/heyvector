@@ -27,20 +27,13 @@ First clone project and install pip dependancies :
 ```
 $ git clone https://github.com/irongomme/heyvector
 $ cd heyvector
-$ pip install --user -r requirements.txt
-```
-
-Set environment variables :
-
-```
-$ FLASK_DEBUG=1
-$ FLASK_APP=app.py
+$ pip3 install -r requirements.txt --user
 ```
 
 Run the local development server :
 
 ```
-$ python -m flask run
+$ python -m flask run --debugger --reload
 ```
 
 Finaly visit http://127.0.0.1:5000
@@ -54,7 +47,7 @@ Finaly visit http://127.0.0.1:5000
 
 ## Authors
 
-* **Jérôme DENIS** - *owner* - [irongomme](https://github.com/irongomme)
+* **irongomme** - *owner* - [irongomme](https://github.com/irongomme)
 
 
 ## License
