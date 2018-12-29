@@ -1,13 +1,71 @@
 {% extends "layout.html" %}
 
 {% block content %}
+
+{% set imported_repos_list = imported_repos.__repr__() %}
+
 <div class="ui vertical stripe segment">
-    <div class="ui middle aligned stackable grid container">
-        <div class="ui three cards">
-            {% for repo in all_repos %}
-                {% include 'parts/repo_card.html' %}
-            {% endfor %}
+    <div class="ui middle aligned container">
+
+        <h2 class="ui header">
+            <i class="share alternate icon"></i>
+            <div class="content">
+                Share
+                <div class="sub header">Manage your Vector packages</div>
+            </div>
+        </h2>
+
+        <div class="ui divider"></div>
+
+        <div class="ui secondary menu" id="share-tabs-menu">
+            <a class="item active" data-tab="shared">Currently shared</a>
+            <a class="item" data-tab="unshared">Sharable repositories</a>
         </div>
+
+        <div class="ui tab segment active" data-tab="shared">
+            <div class="ui three cards">
+                {% if imported_repos|length > 0 %}
+                    {% set is_repository_shared = True %}
+                    {% for repo in all_repos %}
+                        {% if repo.name in imported_repos_list %}
+                            {% include 'parts/repo_card.html' %}
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                <div class="ui basic segment">
+                    <div class="ui icon info message">
+                        <i class="archive icon"></i>
+                        <div class="content">
+                            <div class="header">
+                                You haven't shared any repository
+                            </div>
+                            <p>
+                                You can share your first github Vector project by choose
+                                it from your sharable repositories
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="ui bottom attached tab segment" data-tab="unshared">
+            <div class="ui three cards">
+                {% set is_repository_shared = False %}
+                {% for repo in all_repos %}
+                    {% if repo.name not in imported_repos_list %}
+                        {% include 'parts/repo_card.html' %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
     </div>
 </div>
+
+<script type="text/javascript">
+$('#share-tabs-menu .item').tab();
+</script>
+
 {% endblock %}

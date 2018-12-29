@@ -1,4 +1,4 @@
-<div class="ui card">
+<div class="ui fluid card">
     <div class="content">
         <img class="right floated mini ui image" src="{{ repo.owner.avatar_url }}">
         <div class="header">
@@ -21,8 +21,16 @@
         {{ repo.watchers_count }} Watchers
       </span>
     </div>
-    <a class="ui bottom attached primary button">
-        <i class="upload icon"></i>
-        import
+    {% if is_repository_shared %}
+    <a class="ui bottom attached pink button" href="{{ url_for('unshare_repo', repository=repo.name) }}">
+        <i class="trash alternate outline icon"></i>
+        unshare
     </a>
+    {% endif %}
+    {% if not is_repository_shared %}
+    <a class="ui bottom attached primary button" href="{{ url_for('share_repo', repository=repo.name) }}">
+        <i class="plus icon"></i>
+        share
+    </a>
+    {% endif %}
 </div>
