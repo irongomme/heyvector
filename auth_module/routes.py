@@ -2,7 +2,6 @@
 
 from flask import render_template, request, redirect, flash, url_for, g, session
 from heyvector import app, db, bcrypt, github
-from heyvector.auth_module.models import User
 from heyvector.auth_module.utils import is_authenticated
 
 
