@@ -30,8 +30,11 @@
 
         <div class="ui tab active" data-tab="shared">
             {% if repos_count > 0 %}
+
                 {% for page in range(pages_count) %}
-                    <div class="ui tab segment{% if page == 0 %} active{% endif %}" data-tab="shared/page-{{ page }}">
+                    <div class="ui tab segment{% if page == 0 %} active{% endif %}"
+                         data-tab="shared/page-{{ page }}"
+                         style="margin-top: 1em;">
                         <div class="ui three cards">
                             {% for repo in shared_repos[page*items_per_page:page*items_per_page+items_per_page] %}
                                 {% include 'parts/user_repo_card.html' %}
@@ -39,32 +42,34 @@
                         </div>
                     </div>
                 {% endfor %}
-            {% else %}
-                <div class="ui basic segment">
-                    <div class="ui icon info message">
-                        <i class="exclamation circle icon"></i>
-                        <div class="content">
-                            <div class="header">
-                                You haven't shared any package
+
+                {% if pages_count > 1 %}
+                    <div id="shared-pages-tabs-menu">
+                        <div class="ui secondary menu">
+                            <div class="right menu">
+                                {% for page in range(pages_count) %}
+                                    <a class="ui item{% if page == 0 %} active{% endif %}"
+                                       data-tab="shared/page-{{ page }}">
+                                        {{ page+1 }}
+                                    </a>
+                                {% endfor %}
                             </div>
-                            <p>
-                                You can share your first github Vector package by choose
-                                it from your sharable repositories tab
-                            </p>
                         </div>
                     </div>
-                </div>
-            {% endif %}
+                {% endif %}
 
-            {% if pages_count > 1 %}
-                <div id="shared-pages-tabs-menu">
-                    <div class="ui secondary menu">
-                        <div class="right menu">
-                            {% for page in range(pages_count) %}
-                                <a class="ui item{% if page == 0 %} active{% endif %}" data-tab="shared/page-{{ page }}">
-                                    {{ page+1 }}
-                                </a>
-                            {% endfor %}
+            {% else %}
+                <div class="ui tab active segment" style="margin-top: 1em;">
+                    <div class="ui basic segment">
+                        <div class="ui icon info message">
+                            <i class="exclamation circle icon"></i>
+                            <div class="content">
+                                <div class="header">You haven't shared any package</div>
+                                <p>
+                                    You can share your first github Vector package by choose
+                                    it from your sharable repositories tab
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -78,8 +83,11 @@
 
         <div class="ui tab" data-tab="unshared">
             {% if repos_count > 0 %}
+
                 {% for page in range(pages_count) %}
-                    <div class="ui tab segment{% if page == 0 %} active{% endif %}" data-tab="unshared/page-{{ page }}">
+                    <div class="ui tab segment{% if page == 0 %} active{% endif %}"
+                         data-tab="unshared/page-{{ page }}"
+                         style="margin-top: 1em;">
                         <div class="ui three cards">
                             {% for repo in unshared_repos[page*items_per_page:page*items_per_page+items_per_page] %}
                                 {% include 'parts/user_repo_card.html' %}
@@ -87,31 +95,31 @@
                         </div>
                     </div>
                 {% endfor %}
-            {% else %}
-                <div class="ui basic segment">
-                    <div class="ui icon info message">
-                        <i class="exclamation circle icon"></i>
-                        <div class="content">
-                            <div class="header">
-                                You haven't got any sharable package
+
+                {% if pages_count > 1 %}
+                    <div id="unshared-pages-tabs-menu">
+                        <div class="ui secondary menu">
+                            <div class="right menu">
+                                {% for page in range(pages_count) %}
+                                    <a class="ui item{% if page == 0 %} active{% endif %}"
+                                       data-tab="unshared/page-{{ page }}">
+                                        {{ page+1 }}
+                                    </a>
+                                {% endfor %}
                             </div>
-                            <p>
-                                You can make your first package by coding it and send it to github
-                            </p>
                         </div>
                     </div>
-                </div>
-            {% endif %}
+                {% endif %}
 
-            {% if pages_count > 1 %}
-                <div id="unshared-pages-tabs-menu">
-                    <div class="ui secondary menu">
-                        <div class="right menu">
-                            {% for page in range(pages_count) %}
-                                <a class="ui item{% if page == 0 %} active{% endif %}" data-tab="unshared/page-{{ page }}">
-                                    {{ page+1 }}
-                                </a>
-                            {% endfor %}
+            {% else %}
+                <div class="ui tab active segment" style="margin-top: 1em;">
+                    <div class="ui basic segment">
+                        <div class="ui icon info message">
+                            <i class="exclamation circle icon"></i>
+                            <div class="content">
+                                <div class="header">You haven't got any sharable package</div>
+                                <p>You can make your first package by coding it and send it to github</p>
+                            </div>
                         </div>
                     </div>
                 </div>
