@@ -1,0 +1,36 @@
+<div class="ui fluid card">
+    <div class="content">
+        <img class="right floated mini ui image" src="{{ repo.owner.avatar_url }}">
+        <div class="header">
+            {{ repo.name }}
+        </div>
+        <div class="meta">
+            {{ repo.full_name }}
+        </div>
+        <div class="description">
+            {{ repo.description }}
+        </div>
+    </div>
+    <div class="extra content">
+      <span>
+        <i class="star icon"></i>
+        {{ repo.stargazers_count }} Stars
+      </span>
+      <span>
+        <i class="eye icon"></i>
+        {{ repo.watchers_count }} Watchers
+      </span>
+    </div>
+    {% if is_repository_shared %}
+    <a class="ui bottom attached pink button" href="{{ url_for('unshare_repo', repository=repo.name) }}">
+        <i class="trash alternate outline icon"></i>
+        unshare
+    </a>
+    {% endif %}
+    {% if not is_repository_shared %}
+    <a class="ui bottom attached primary button" href="{{ url_for('share_repo', repository=repo.name) }}">
+        <i class="plus icon"></i>
+        share
+    </a>
+    {% endif %}
+</div>
