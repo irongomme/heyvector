@@ -59,11 +59,13 @@
             {% if pages_count > 1 %}
                 <div id="shared-pages-tabs-menu">
                     <div class="ui secondary menu">
-                        {% for page in range(pages_count) %}
-                            <a class="item{% if page == 0 %} active{% endif %}" data-tab="shared/page-{{ page }}">
-                                {{ page+1 }}
-                            </a>
-                        {% endfor %}
+                        <div class="right menu">
+                            {% for page in range(pages_count) %}
+                                <a class="ui item{% if page == 0 %} active{% endif %}" data-tab="shared/page-{{ page }}">
+                                    {{ page+1 }}
+                                </a>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             {% endif %}
@@ -104,11 +106,13 @@
             {% if pages_count > 1 %}
                 <div id="unshared-pages-tabs-menu">
                     <div class="ui secondary menu">
-                        {% for page in range(pages_count) %}
-                            <a class="item{% if page == 0 %} active{% endif %}" data-tab="unshared/page-{{ page }}">
-                                {{ page+1 }}
-                            </a>
-                        {% endfor %}
+                        <div class="right menu">
+                            {% for page in range(pages_count) %}
+                                <a class="ui item{% if page == 0 %} active{% endif %}" data-tab="unshared/page-{{ page }}">
+                                    {{ page+1 }}
+                                </a>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             {% endif %}
