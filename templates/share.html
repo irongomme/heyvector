@@ -2,9 +2,8 @@
 
 {% block content %}
 
-{% set items_per_page = 6 %}
-
-<div class="ui vertical stripe segment">
+{% raw %}
+<div class="ui vertical stripe segment" id="app-share">
     <div class="ui middle aligned container">
 
         <h2 class="ui header">
@@ -17,123 +16,78 @@
 
         <div class="ui divider"></div>
 
-        <div id="share-tabs-menu">
-            <div class="ui secondary menu">
-                <a class="item active" data-tab="shared">Currently shared</a>
-                <a class="item" data-tab="unshared">Sharable repositories</a>
+        <div class="ui basic segment" v-if="page_loading">
+            <p></p>
+            <div class="ui active inverted dimmer">
+                <div class="ui massive text loader">Loading ...</div>
+            </div>
+            <img class="ui wireframe image" src="/static/img/short-paragraph.png">
+            <img class="ui wireframe image" src="/static/img/short-paragraph.png">
+            <img class="ui wireframe image" src="/static/img/short-paragraph.png">
+       </div>
+
+        <div v-if="items.length > 0">
+            <div class="ui three cards" v-if="!page_loading">
+                <div class="ui fluid card" v-for="repository in items">
+                    <div class="content">
+                        <img class="right floated mini ui image" v-bind:src="repository.owner.avatar_url">
+                        <div class="header">{{ repository.name }}</div>
+                        <div class="meta">{{ repository.full_name }}</div>
+                        <div class="description">{{ repository.description }}</div>
+                    </div>
+                    <div class="extra content">
+                      <span><i class="star icon"></i> {{ repository.stargazers_count }} Stars</span>
+                      <span><i class="eye icon"></i> {{ repository.watchers_count }} Watchers</span>
+                    </div>
+                    <a class="ui bottom attached pink button"
+                       v-bind:href="'/unshare/' + repository.name"
+                       v-if="repository.is_shared">
+                        <i class="trash alternate outline icon"></i>
+                        unshare
+                    </a>
+                    <a class="ui bottom attached primary button"
+                       v-bind:href="'/share/' + repository.name"
+                       v-else>
+                        <i class="plus icon"></i>
+                        share
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="ui tab active segment" v-if="!page_loading && items.length == 0">
+            <div class="ui basic segment">
+                <div class="ui icon info message">
+                    <i class="exclamation circle icon"></i>
+                    <div class="content">
+                        <div class="header">You haven't got any sharable package</div>
+                        <p>You can make your first package by coding it and send it to github</p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        {% set is_repository_shared = True %}
-        {% set repos_count = shared_repos|length %}
-        {% set pages_count = (repos_count/items_per_page)|round(0,'ceil')|int %}
+        <div class="ui divider"></div>
 
-        <div class="ui tab active" data-tab="shared">
-            {% if repos_count > 0 %}
-
-                {% for page in range(pages_count) %}
-                    <div class="ui tab segment{% if page == 0 %} active{% endif %}"
-                         data-tab="shared/page-{{ page }}"
-                         style="margin-top: 1em;">
-                        <div class="ui three cards">
-                            {% for repo in shared_repos[page*items_per_page:page*items_per_page+items_per_page] %}
-                                {% include 'parts/user_repo_card.html' %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                {% endfor %}
-
-                {% if pages_count > 1 %}
-                    <div id="shared-pages-tabs-menu">
-                        <div class="ui secondary menu">
-                            <div class="right menu">
-                                {% for page in range(pages_count) %}
-                                    <a class="ui item{% if page == 0 %} active{% endif %}"
-                                       data-tab="shared/page-{{ page }}">
-                                        {{ page+1 }}
-                                    </a>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-
-            {% else %}
-                <div class="ui tab active segment" style="margin-top: 1em;">
-                    <div class="ui basic segment">
-                        <div class="ui icon info message">
-                            <i class="exclamation circle icon"></i>
-                            <div class="content">
-                                <div class="header">You haven't shared any package</div>
-                                <p>
-                                    You can share your first github Vector package by choose
-                                    it from your sharable repositories tab
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+        <div v-if="pages_count > 1">
+            <div class="ui secondary menu">
+                <div class="right menu">
+                    <a class="ui item"
+                       v-bind:class="{ active: page_n==page }"
+                       v-bind:data-tab="'unshared/page-' + page_n"
+                       v-for="page_n in pages_count"
+                       v-on:click="page=page_n">
+                        {{ page_n }}
+                    </a>
                 </div>
-            {% endif %}
-
-        </div>
-
-        {% set is_repository_shared = False %}
-        {% set repos_count = unshared_repos|length %}
-        {% set pages_count = (repos_count/items_per_page)|round(0,'ceil')|int %}
-
-        <div class="ui tab" data-tab="unshared">
-            {% if repos_count > 0 %}
-
-                {% for page in range(pages_count) %}
-                    <div class="ui tab segment{% if page == 0 %} active{% endif %}"
-                         data-tab="unshared/page-{{ page }}"
-                         style="margin-top: 1em;">
-                        <div class="ui three cards">
-                            {% for repo in unshared_repos[page*items_per_page:page*items_per_page+items_per_page] %}
-                                {% include 'parts/user_repo_card.html' %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                {% endfor %}
-
-                {% if pages_count > 1 %}
-                    <div id="unshared-pages-tabs-menu">
-                        <div class="ui secondary menu">
-                            <div class="right menu">
-                                {% for page in range(pages_count) %}
-                                    <a class="ui item{% if page == 0 %} active{% endif %}"
-                                       data-tab="unshared/page-{{ page }}">
-                                        {{ page+1 }}
-                                    </a>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-
-            {% else %}
-                <div class="ui tab active segment" style="margin-top: 1em;">
-                    <div class="ui basic segment">
-                        <div class="ui icon info message">
-                            <i class="exclamation circle icon"></i>
-                            <div class="content">
-                                <div class="header">You haven't got any sharable package</div>
-                                <p>You can make your first package by coding it and send it to github</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-
+            </div>
         </div>
 
     </div>
 </div>
+{% endraw %}
 
-<script type="text/javascript">
-$('#share-tabs-menu .menu .item').tab();
-$('#shared-pages-tabs-menu .menu .item').tab();
-$('#unshared-pages-tabs-menu .menu .item').tab();
-</script>
+{% endblock %}
 
+{% block javascript %}
+<script src="/static/js/share.js"></script>
 {% endblock %}

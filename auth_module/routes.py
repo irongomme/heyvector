@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-from flask import render_template, request, redirect, flash, url_for, g, session
+from flask import render_template, redirect, flash, url_for, g, session, jsonify
 from heyvector import app, db, bcrypt, github
-from heyvector.auth_module.utils import is_authenticated
+from heyvector.auth_module.utils import is_authenticated, get_github_user
 
 
 @app.context_processor
@@ -42,3 +42,9 @@ def authorized(oauth_token):
 @github.access_token_getter
 def token_getter():
     return session['oauth_token']
+
+@app.route('/github/user', endpoint = 'auth.github_user', methods=['GET'])
+def github_user():
+    current_username = session.get('user').get('login')
+    user = get_github_user(current_username)
+    return jsonify(user)

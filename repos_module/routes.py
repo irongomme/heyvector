@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import render_template, session, redirect
+from flask import request, render_template, session, redirect, jsonify
 from heyvector import app, db, github
 from heyvector.auth_module.utils import login_required
 from heyvector.repos_module.models import Repository
@@ -9,26 +9,19 @@ from heyvector.repos_module.utils import list_user_repositories, get_user_reposi
 
 @app.route('/explore', endpoint = 'explore')
 def explore():
-    return render_template('explore.html')
+    short_repositories = Repository.query.all()
+    full_repositories = []
+
+    for repository in short_repositories:
+        full_repositories.append(get_user_repository(repository.owner, repository.name))
+
+    return render_template('explore.html', repositories = full_repositories)
 
 
 @app.route('/share', endpoint = 'share')
 @login_required
 def contributions():
-    username = session.get('user').get('login')
-    user_shared_repos = []
-    user_unshared_repos = []
-    imported_repos = Repository.query.filter_by(owner=username).all()
-
-    for repo in list_user_repositories(username):
-        if repo.get('name') in imported_repos.__repr__():
-            user_shared_repos.append(repo)
-        else:
-            user_unshared_repos.append(repo)
-
-    return render_template('share.html',
-        shared_repos = user_shared_repos,
-        unshared_repos = user_unshared_repos)
+    return render_template('share.html')
 
 
 @app.route('/share/<repository>', endpoint = 'share_repo')
@@ -42,6 +35,7 @@ def add_repository(repository):
 
     return redirect('share')
 
+
 @app.route('/unshare/<repository>', endpoint = 'unshare_repo')
 @login_required
 def remove_repository(repository):
@@ -52,3 +46,15 @@ def remove_repository(repository):
     db.session.commit()
 
     return redirect('share')
+
+
+@app.route('/repos/user_all', endpoint = 'ajax_repos_user_all')
+@login_required
+def list_repositories():
+    current_username = session.get('user').get('login')
+    user_repositories = list_user_repositories(current_username, **request.args)
+    shared_repositories = Repository.query.filter_by(owner=current_username).all()
+    for repository in user_repositories:
+        repository['is_shared'] = True if repository.get('name') in shared_repositories.__repr__() else False
+
+    return jsonify(user_repositories)

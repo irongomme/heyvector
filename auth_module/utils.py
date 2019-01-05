@@ -2,6 +2,7 @@
 
 from functools import wraps
 from flask import session, redirect, url_for
+from heyvector import cache, github
 
 
 def login_required(func):
@@ -14,3 +15,6 @@ def login_required(func):
 
 def is_authenticated():
     return session.get('user', None) is not None
+
+def get_github_user(username):
+    return github.get('/users/%s' % username)

@@ -55,6 +55,7 @@ Finaly visit http://127.0.0.1:5000
 
 * [Flask](https://flask-login.readthedocs.io/en/latest/) - Web Framework
 * [Semantic-UI](https://semantic-ui.com/introduction/getting-started.html) - UI Framework
+* [Vue.js](https://vuejs.org/v2/guide/) - Vue.js 2
 
 
 ## Authors
