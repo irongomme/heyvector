@@ -5,7 +5,8 @@ var app = new Vue({
         per_page: 6,
         total_count: 0,
         items: [],
-        page_loading: 0
+        page_loading: 0,
+        unshare_loading: 0
     },
     computed: {
         pages_count() {
@@ -32,6 +33,16 @@ var app = new Vue({
         },
         changePage: function(page) {
             this.page = page;
+        },
+        unshare: function(repository) {
+            var self = this;
+            if (confirm('Are you sure your want to remove package "'+repository.name+'" from public catalog ?')) {
+                this.unshare_loading++;
+                axios.get('/unshare/' + repository.name).then(function(response) {
+                    self.unshare_loading--;
+                    repository.is_shared = false;
+                });
+            }
         }
     },
     mounted: function() {

@@ -45,7 +45,7 @@ def remove_repository(repository):
     db.session.delete(repo)
     db.session.commit()
 
-    return redirect('share')
+    return jsonify({"success": True})
 
 
 @app.route('/repos/user_all', endpoint = 'ajax_repos_user_all')

@@ -36,24 +36,34 @@
                         <div class="description">{{ repository.description }}</div>
                     </div>
                     <div class="extra content">
-                      <span><i class="star icon"></i> {{ repository.stargazers_count }} Stars</span>
-                      <span><i class="eye icon"></i> {{ repository.watchers_count }} Watchers</span>
+                        <a class="ui primary button"
+                           v-bind:href="'/update/' + repository.name"
+                           v-if="repository.is_shared">
+                            <i class="refresh icon"></i>
+                            update
+                        </a>
+                        <a class="ui pink button"
+                           v-on:click="unshare(repository)"
+                           v-bind:class="{ disabled: unshare_loading }"
+                           v-if="repository.is_shared">
+                            <i class="icon"
+                               v-bind:class="{
+                                   'circle notch loading' :unshare_loading,
+                                   'trash alternate outline': !unshare_loading
+                               }"></i>
+                            unshare
+                        </a>
+                        <a class="ui primary button"
+                           v-bind:href="'/share/' + repository.name"
+                           v-else>
+                            <i class="plus icon"></i>
+                            share
+                        </a>
                     </div>
-                    <a class="ui bottom attached pink button"
-                       v-bind:href="'/unshare/' + repository.name"
-                       v-if="repository.is_shared">
-                        <i class="trash alternate outline icon"></i>
-                        unshare
-                    </a>
-                    <a class="ui bottom attached primary button"
-                       v-bind:href="'/share/' + repository.name"
-                       v-else>
-                        <i class="plus icon"></i>
-                        share
-                    </a>
                 </div>
             </div>
         </div>
+
         <div class="ui tab active segment" v-if="!page_loading && items.length == 0">
             <div class="ui basic segment">
                 <div class="ui icon info message">
