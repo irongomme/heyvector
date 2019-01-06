@@ -51,6 +51,20 @@ $ python3 -m flask run --debugger --reload
 Finaly visit http://127.0.0.1:5000
 
 
+## Roadmap
+
+### Version 1.0.0
+
+- [x] Ability to share github repository
+- [ ] Exploring catalog
+- [ ] Expose api endpoint to export catalog
+
+### Version 1.1.0
+
+- [ ] Set personnal Vector settings stored into browser
+- [ ] Execute scripts online
+
+
 ## Built With
 
 * [Flask](https://flask-login.readthedocs.io/en/latest/) - Web Framework
