@@ -1,9 +1,90 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="ui vertical stripe segment">
-    <div class="ui middle aligned stackable grid container">
-        PROUT
+
+{% set items_per_page = 6 %}
+
+{% raw %}
+
+<div id="app-explore" v-cloak>
+    <div class="ui vertical stripe segment">
+        <div class="ui middle aligned container">
+
+            <h2 class="ui header">
+                <i class="search icon"></i>
+                <div class="content">
+                    Explore
+                    <div class="sub header">Find a package in the calalog</div>
+                </div>
+            </h2>
+
+            <div class="ui divider"></div>
+
+            <div class="ui basic segment" v-if="page_loading">
+                <p></p>
+                <div class="ui active inverted dimmer">
+                    <div class="ui massive text loader">Loading ...</div>
+                </div>
+                <img class="ui wireframe image" src="/static/img/short-paragraph.png">
+                <img class="ui wireframe image" src="/static/img/short-paragraph.png">
+                <img class="ui wireframe image" src="/static/img/short-paragraph.png">
+           </div>
+
+            <div v-if="items.length > 0">
+                <div class="ui three cards" v-if="!page_loading">
+                    <div class="ui fluid card" v-for="repository in items">
+                        <div class="content">
+                            <img class="right floated mini ui image" v-bind:src="repository.owner.avatar_url">
+                            <div class="header">{{ repository.name }}</div>
+                            <div class="meta" v-if="repository.is_shared">
+                                <div class="ui label">
+                                    {{ repository.shared_version }}
+                                </div>
+                            </div>
+                            <div class="meta" v-if="!repository.is_shared">Not shared</div>
+                            <div class="description">{{ repository.description }}</div>
+                        </div>
+                        <div class="extra content">
+                            <div class="ui right floated">
+                                <a class="ui icon basic button"
+                                  target="_blank"
+                                   v-bind:href="'https://github.com/'+repository.full_name">
+                                    <i class="github icon"></i>
+                                </a>
+                                <a class="ui basic icon button"
+                                   v-bind:href="'https://api.github.com/repos/'+repository.full_name+'/tarball/'+repository.version">
+                                    <i class="download icon"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui divider"></div>
+
+            <div v-if="pages_count > 1">
+                <div class="ui secondary menu">
+                    <div class="right menu">
+                        <a class="ui item"
+                           v-bind:class="{ active: page_n==page }"
+                           v-bind:data-tab="'unshared/page-' + page_n"
+                           v-for="page_n in pages_count"
+                           v-on:click="page=page_n">
+                            {{ page_n }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
+
+{% endraw %}
+
+{% endblock %}
+
+{% block javascript %}
+<script src="/static/js/explore.js"></script>
 {% endblock %}

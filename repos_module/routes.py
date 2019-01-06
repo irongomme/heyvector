@@ -10,13 +10,7 @@ from heyvector.repos_module.utils import list_user_repositories, get_user_reposi
 
 @app.route('/explore', endpoint = 'repos.explore')
 def explore():
-    short_repositories = Repository.query.all()
-    full_repositories = []
-
-    for repository in short_repositories:
-        full_repositories.append(get_user_repository(repository.owner, repository.name))
-
-    return render_template('explore.html', repositories = full_repositories)
+    return render_template('explore.html')
 
 
 @app.route('/share', endpoint = 'repos.share')
@@ -97,3 +91,32 @@ def list_repositories():
             repository['is_shared'] = False
 
     return jsonify(user_repositories)
+
+
+@app.route('/repos/all', endpoint = 'repos.ajax.list')
+def list():
+    page = int(request.args['page'])
+    per_page = int(request.args['per_page'])
+    offset = (page-1) * per_page
+    short_repositories = Repository.query \
+        .limit(per_page) \
+        .offset(offset) \
+        .all()
+    full_repositories = []
+
+    for repository in short_repositories:
+        full_repository = get_user_repository(repository.owner, repository.name)
+        full_repository['version'] = repository.version
+        full_repository['created'] = repository.created
+        full_repository['updated'] = repository.updated
+        full_repository['description'] = repository.description
+        full_repositories.append(full_repository)
+
+    return jsonify(full_repositories)
+
+
+@app.route('/repos/count', endpoint = 'repos.ajax.count')
+def count():
+    count = Repository.query.count()
+
+    return jsonify({'count': count})

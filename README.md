@@ -53,13 +53,15 @@ Finaly visit http://127.0.0.1:5000
 
 ## Roadmap
 
-### Version 1.0.0
+### Version 1.0
 
 - [x] Ability to share github repository
-- [ ] Exploring catalog
+- [x] Exploring catalog
+- [ ] Search in catalog
+- [ ] UI improvements
 - [ ] Expose api endpoint to export catalog
 
-### Version 1.1.0
+### Version 1.1
 
 - [ ] Set personnal Vector settings stored into browser
 - [ ] Execute scripts online
