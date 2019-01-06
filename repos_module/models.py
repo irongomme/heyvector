@@ -15,7 +15,8 @@ class Repository(db.Model):
     version = db.Column(db.String(6), nullable=False)
     entrypoint = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String, nullable=True)
-    created = db.Column(db.DateTime, default=datetime.now())
+    created = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    updated = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
     def __repr__(self):
         return '%s/%s' % (self.owner, self.name)

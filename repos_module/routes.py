@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from flask import request, render_template, session, redirect, jsonify
+from datetime import datetime
 from heyvector import app, db, github
 from heyvector.auth_module.utils import login_required
 from heyvector.repos_module.models import Repository
@@ -33,7 +34,8 @@ def add_repository(repository):
         values = request.get_json()
         try:
             repo = Repository(id = github_repo.get('id'), name = github_repo.get('name'), owner = current_username,
-                              version = values.get('version'), entrypoint = values.get('entrypoint'))
+                              version = values.get('version'), entrypoint = values.get('entrypoint'),
+                              description = github_repo.get('description'))
             db.session.add(repo)
             db.session.commit()
             result = True
@@ -54,6 +56,8 @@ def update_repository(repository):
             repo = Repository.query.get(github_repo.get('id'))
             repo.version =  values.get('version')
             repo.entrypoint = values.get('entrypoint')
+            repo.description = github_repo.get('description')
+            repo.updated = datetime.now()
             db.session.commit()
             result = True
         except:
