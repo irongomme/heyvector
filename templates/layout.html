@@ -22,11 +22,13 @@
       <a class="{% if request.path == url_for('index') %}active {% endif %}item" href="{{ url_for('index') }}">
           <i class="icon home"></i>
       </a>
-      <a class="{% if request.path == url_for('explore') %}active {% endif %}item" href="{{ url_for('explore') }}">
+      <a class="{% if request.path == url_for('repos.explore') %}active {% endif %}item"
+         href="{{ url_for('repos.explore') }}">
           <i class="icon search"></i> Explore
       </a>
       {% if is_authenticated %}
-      <a class="{% if request.path == url_for('share') %}active {% endif %}item" href="{{ url_for('share') }}">
+      <a class="{% if request.path == url_for('repos.share') %}active {% endif %}item"
+         href="{{ url_for('repos.share') }}">
           <i class="icon share alternate"></i> Share
       </a>
       {% endif %}
@@ -56,9 +58,9 @@
 <!-- Sidebar Menu -->
 <div class="ui vertical inverted sidebar menu">
   <a class="active item" href="{{ url_for('index') }}">Home</a>
-  <a class="item href="{{ url_for('explore') }}"">Explore</a>
+  <a class="item href="{{ url_for('repos.explore') }}"">Explore</a>
   {% if is_authenticated %}
-  <a class="item" href="{{ url_for('share') }}">Share</a>
+  <a class="item" href="{{ url_for('repos.share') }}">Share</a>
   {% endif %}
   {% if user and user.id %}
    <a class="item" href="{{ url_for('auth.logout') }}">Sign out</a>
@@ -80,11 +82,13 @@
         <a class="{% if request.path == url_for('index') %}active {% endif %}item" href="{{ url_for('index') }}">
             <i class="icon home"></i>
         </a>
-        <a class="{% if request.path == url_for('explore') %}active {% endif %}item" href="{{ url_for('explore') }}">
+        <a class="{% if request.path == url_for('repos.explore') %}active {% endif %}item"
+           href="{{ url_for('repos.explore') }}">
             <i class="icon search"></i> Explore
         </a>
         {% if is_authenticated %}
-        <a class="{% if request.path == url_for('share') %}active {% endif %}item" href="{{ url_for('share') }}">
+        <a class="{% if request.path == url_for('repos.share') %}active {% endif %}item"
+           href="{{ url_for('repos.share') }}">
             <i class="icon share alternate"></i> Share
         </a>
         {% endif %}

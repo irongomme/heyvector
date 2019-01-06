@@ -7,7 +7,7 @@ from heyvector.repos_module.models import Repository
 from heyvector.repos_module.utils import list_user_repositories, get_user_repository
 
 
-@app.route('/explore', endpoint = 'explore')
+@app.route('/explore', endpoint = 'repos.explore')
 def explore():
     short_repositories = Repository.query.all()
     full_repositories = []
@@ -18,13 +18,13 @@ def explore():
     return render_template('explore.html', repositories = full_repositories)
 
 
-@app.route('/share', endpoint = 'share')
+@app.route('/share', endpoint = 'repos.share')
 @login_required
 def contributions():
     return render_template('share.html')
 
 
-@app.route('/share/<repository>', endpoint = 'share_repo', methods=['POST'])
+@app.route('/share/<repository>', endpoint = 'repos.ajax.share', methods=['POST'])
 @login_required
 def add_repository(repository):
     if request.method == "POST":
@@ -43,7 +43,7 @@ def add_repository(repository):
     return jsonify({"success": result or False})
 
 
-@app.route('/share_update/<repository>', endpoint = 'update_repo', methods=['POST'])
+@app.route('/share_update/<repository>', endpoint = 'repos.ajax.update', methods=['POST'])
 @login_required
 def update_repository(repository):
     if request.method == "POST":
@@ -62,7 +62,7 @@ def update_repository(repository):
     return jsonify({"success": result or False})
 
 
-@app.route('/unshare/<repository>', endpoint = 'unshare_repo')
+@app.route('/unshare/<repository>', endpoint = 'repos.ajax.unshare')
 @login_required
 def remove_repository(repository):
     current_username = session.get('user').get('login')
@@ -78,7 +78,7 @@ def remove_repository(repository):
     return jsonify({"success": result or False})
 
 
-@app.route('/repos/user_all', endpoint = 'ajax_repos_user_all')
+@app.route('/repos/user_all', endpoint = 'repos.ajax.user_list')
 @login_required
 def list_repositories():
     current_username = session.get('user').get('login')
