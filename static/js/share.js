@@ -17,6 +17,9 @@ var app = new Vue({
     computed: {
         pages_count() {
             return Math.ceil(this.total_count / this.per_page);
+        },
+        selected_version() {
+            return this.selected.version;
         }
     },
     methods: {
@@ -37,9 +40,6 @@ var app = new Vue({
                 self.page_loading--;
             });
         },
-        getRepositoryVersions: function(repository) {
-            return axios.get('https://api.github.com/repos/'+repository.full_name+'/tags');
-        },
         getRepositoryEntrypoints: function(repository) {
             return axios.get('https://api.github.com/repos/'+repository.full_name+'/contents');
         },
@@ -50,14 +50,13 @@ var app = new Vue({
             var self = this;
             this.selected.repository = repository;
             repository.share_loading = true;
-            axios.all([this.getRepositoryVersions(repository), this.getRepositoryEntrypoints(repository)])
-                .then(axios.spread(function (versions, entrypoints) {
+            axios.get('https://api.github.com/repos/'+repository.full_name+'/tags')
+                .then(function (versions) {
                     self.selected.versions = versions.data;
-                    self.selected.entrypoints = entrypoints.data;
                     $('.ui.modal').modal('show');
                     $('.ui.dropdown').dropdown();
                     repository.share_loading = false;
-                }));
+                });
         },
         share: function(repository) {
             var self = this;
@@ -68,6 +67,16 @@ var app = new Vue({
             }).then(function(response) {
                 repository.share_loading = false;
                 repository.is_shared = true;
+            });
+        },
+        update: function(repository) {
+            var self = this;
+            repository.share_loading = true;
+            axios.post('/share_update/' + repository.name, {
+                version: this.selected.version,
+                entrypoint: this.selected.entrypoint
+            }).then(function(response) {
+                repository.share_loading = false;
             });
         },
         unshare: function(repository) {
@@ -87,6 +96,13 @@ var app = new Vue({
     watch: {
         page: function(page) {
             this.getRepositories(page);
+        },
+        selected_version: function(version) {
+            var self = this;
+            axios.get('https://api.github.com/repos/'+this.selected.repository.full_name+'/contents')
+                .then(function(entrypoints) {
+                    self.selected.entrypoints = entrypoints.data;
+                });
         }
     }
 })

@@ -43,6 +43,25 @@ def add_repository(repository):
     return jsonify({"success": result or False})
 
 
+@app.route('/share_update/<repository>', endpoint = 'update_repo', methods=['POST'])
+@login_required
+def update_repository(repository):
+    if request.method == "POST":
+        current_username = session.get('user').get('login')
+        github_repo = get_user_repository(current_username, repository)
+        values = request.get_json()
+        try:
+            repo = Repository.query.get(github_repo.get('id'))
+            repo.version =  values.get('version')
+            repo.entrypoint = values.get('entrypoint')
+            db.session.commit()
+            result = True
+        except:
+            result = False
+
+    return jsonify({"success": result or False})
+
+
 @app.route('/unshare/<repository>', endpoint = 'unshare_repo')
 @login_required
 def remove_repository(repository):

@@ -39,9 +39,14 @@
                         </div>
                         <div class="extra content">
                             <a class="ui primary button"
-                               v-bind:href="'/update/' + repository.name"
+                               v-on:click="openShareModal(repository)"
+                               v-bind:class="{ disabled: repository.share_loading }"
                                v-if="repository.is_shared">
-                                <i class="refresh icon"></i>
+                                <i class="icon"
+                                   v-bind:class="{
+                                       'circle notch loading': repository.share_loading,
+                                       'refresh': !repository.share_loading
+                                   }"></i>
                                 update
                             </a>
                             <a class="ui pink button"
@@ -111,7 +116,7 @@
             <div class="description">
                 <div class="ui header">Please choose options below to share your package : </div>
                 <form class="ui form">
-                    <div class="field" v-show="selected.entrypoints.length > 0 && selected.versions.length > 0">
+                    <div class="field" v-show="selected.versions.length > 0">
                         <label>Select the release to share</label>
                         <select class="ui dropdown" v-model="selected.version">
                             <option v-for="version in selected.versions" v-bind:value="version.name">
@@ -135,7 +140,7 @@
                             </option>
                         </select>
                     </div>
-                    <div class="ui basic segment" v-if="selected.entrypoints.length == 0">
+                    <div class="ui basic segment" v-if="selected.version && selected.entrypoints.length == 0">
                         <div class="ui icon info message">
                             <i class="exclamation circle icon"></i>
                             <div class="content">
@@ -152,8 +157,18 @@
             </div>
             <div class="ui positive right labeled icon button"
                  v-bind:class="{disabled: (!selected.version||!selected.entrypoint||selected.repository.share_loading)}"
-                 v-on:click="share(selected.repository)">
+                 v-on:click="share(selected.repository)"
+                 v-if="!selected.repository.is_shared">
                 Share
+                <i class="icon" v-bind:class="{
+                    checkmark: !selected.repository.share_loading,
+                    loading: selected.repository.share_loading }"></i>
+            </div>
+            <div class="ui positive right labeled icon button"
+                 v-bind:class="{disabled: (!selected.version||!selected.entrypoint||selected.repository.share_loading)}"
+                 v-on:click="update(selected.repository)"
+                 v-if="selected.repository.is_shared">
+                Update
                 <i class="icon" v-bind:class="{
                     checkmark: !selected.repository.share_loading,
                     loading: selected.repository.share_loading }"></i>
