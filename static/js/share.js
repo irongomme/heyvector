@@ -73,8 +73,29 @@ var app = new Vue({
                 entrypoint: this.selected.entrypoint
             }).then(function(response) {
                 repository.share_loading = false;
-                repository.is_shared = true;
-                repository.shared_version = self.selected.version;
+                if (response.data.success) {
+                    repository.is_shared = true;
+                    repository.shared_version = self.selected.version;
+                    $.uiAlert({
+                        textHead: 'Adding done !',
+                        text: 'Your package has been added on public catalog',
+                        bgcolor: '#19c3aa',
+                        textcolor: '#fff',
+                        position: 'top-right',
+                        icon: 'warning sign',
+                        time: 3,
+                    });
+                } else {
+                    $.uiAlert({
+                        textHead: 'Oups !',
+                        text: 'An error occured during the operation',
+                        bgcolor: '#f2711c',
+                        textcolor: '#fff',
+                        position: 'top-right',
+                        icon: 'checkmark box',
+                        time: 3,
+                    });
+                }
             });
         },
         update: function(repository) {
@@ -85,7 +106,28 @@ var app = new Vue({
                 entrypoint: this.selected.entrypoint
             }).then(function(response) {
                 repository.share_loading = false;
-                repository.shared_version = self.selected.version;
+                if (response.data.success) {
+                    repository.shared_version = self.selected.version;
+                    $.uiAlert({
+                        textHead: 'Update done !',
+                        text: 'Your package has been updated from public catalog',
+                        bgcolor: '#19c3aa',
+                        textcolor: '#fff',
+                        position: 'top-right',
+                        icon: 'warning sign',
+                        time: 3,
+                    });
+                } else {
+                    $.uiAlert({
+                        textHead: 'Oups !',
+                        text: 'An error occured during the operation',
+                        bgcolor: '#f2711c',
+                        textcolor: '#fff',
+                        position: 'top-right',
+                        icon: 'checkmark box',
+                        time: 3,
+                    });
+                }
             });
         },
         unshare: function(repository) {
@@ -94,7 +136,28 @@ var app = new Vue({
                 repository.unshare_loading = true;
                 axios.get('/unshare/' + repository.name).then(function(response) {
                     repository.unshare_loading = false;
-                    repository.is_shared = false;
+                    if (response.data.success) {
+                        repository.is_shared = false;
+                        $.uiAlert({
+                            textHead: 'Unsharing done !',
+                            text: 'Your package has been unpublished from public catalog',
+                            bgcolor: '#19c3aa',
+                            textcolor: '#fff',
+                            position: 'top-right',
+                            icon: 'warning sign',
+                            time: 3,
+                        });
+                    } else {
+                        $.uiAlert({
+                            textHead: 'Oups !',
+                            text: 'An error occured during the operation',
+                            bgcolor: '#f2711c',
+                            textcolor: '#fff',
+                            position: 'top-right',
+                            icon: 'checkmark box',
+                            time: 3,
+                        });
+                    }
                 });
             }
         }
