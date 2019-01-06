@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import render_template, redirect, flash, url_for, g, session, jsonify
+from flask import request, render_template, redirect, flash, url_for, g, session, jsonify
 from heyvector import app, db, bcrypt, github
 from heyvector.auth_module.utils import is_authenticated, get_github_user
 
