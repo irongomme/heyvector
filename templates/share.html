@@ -34,22 +34,38 @@
                         <div class="content">
                             <img class="right floated mini ui image" v-bind:src="repository.owner.avatar_url">
                             <div class="header">{{ repository.name }}</div>
-                            <div class="meta">{{ repository.full_name }}</div>
+                            <div class="meta" v-if="repository.is_shared">
+                                <div class="ui label">
+                                    {{ repository.shared_version }}
+                                </div>
+                            </div>
+                            <div class="meta" v-if="!repository.is_shared">Not shared</div>
                             <div class="description">{{ repository.description }}</div>
                         </div>
                         <div class="extra content">
-                            <a class="ui primary button"
-                               v-on:click="openShareModal(repository)"
-                               v-bind:class="{ disabled: repository.share_loading }"
-                               v-if="repository.is_shared">
-                                <i class="icon"
-                                   v-bind:class="{
-                                       'circle notch loading': repository.share_loading,
-                                       'refresh': !repository.share_loading
-                                   }"></i>
-                                update
-                            </a>
-                            <a class="ui pink button"
+                            <div class="ui right floated">
+                                <a class="ui icon basic button"
+                                   v-on:click="openShareModal(repository)"
+                                   v-bind:class="{ disabled: repository.share_loading }"
+                                   v-if="repository.is_shared">
+                                    <i class="icon"
+                                       v-bind:class="{
+                                           'circle notch loading': repository.share_loading,
+                                           'pencil alternate': !repository.share_loading
+                                       }"></i>
+                                </a>
+                                <a class="ui green basic icon button"
+                                   v-on:click="openShareModal(repository)"
+                                   v-bind:class="{ disabled: repository.share_loading }"
+                                   v-else>
+                                    <i class="icon"
+                                       v-bind:class="{
+                                           'circle notch loading': repository.share_loading,
+                                           'plus': !repository.share_loading
+                                       }"></i>
+                                </a>
+                            </div>
+                            <a class="ui red basic icon button"
                                v-on:click="unshare(repository)"
                                v-bind:class="{ disabled: repository.unshare_loading }"
                                v-if="repository.is_shared">
@@ -58,18 +74,6 @@
                                        'circle notch loading': repository.unshare_loading,
                                        'trash alternate outline': !repository.unshare_loading
                                    }"></i>
-                                unshare
-                            </a>
-                            <a class="ui primary button"
-                               v-on:click="openShareModal(repository)"
-                               v-bind:class="{ disabled: repository.share_loading }"
-                               v-else>
-                                <i class="icon"
-                                   v-bind:class="{
-                                       'circle notch loading': repository.share_loading,
-                                       'plus': !repository.share_loading
-                                   }"></i>
-                                share
                             </a>
                         </div>
                     </div>

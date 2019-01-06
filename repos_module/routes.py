@@ -85,6 +85,11 @@ def list_repositories():
     user_repositories = list_user_repositories(current_username, **request.args)
     shared_repositories = Repository.query.filter_by(owner=current_username).all()
     for repository in user_repositories:
-        repository['is_shared'] = True if repository.get('name') in shared_repositories.__repr__() else False
+        if repository.get('name') in shared_repositories.__repr__():
+            shared_repository = Repository.query.get(repository.get('id'))
+            repository['shared_version'] = shared_repository.version
+            repository['is_shared'] = True
+        else:
+            repository['is_shared'] = False
 
     return jsonify(user_repositories)

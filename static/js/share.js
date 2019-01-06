@@ -40,14 +40,12 @@ var app = new Vue({
                 self.page_loading--;
             });
         },
-        getRepositoryEntrypoints: function(repository) {
-            return axios.get('https://api.github.com/repos/'+repository.full_name+'/contents');
-        },
         changePage: function(page) {
             this.page = page;
         },
         openShareModal: function(repository) {
             var self = this;
+            this.resetSelection();
             this.selected.repository = repository;
             repository.share_loading = true;
             axios.get('https://api.github.com/repos/'+repository.full_name+'/tags')
@@ -58,6 +56,15 @@ var app = new Vue({
                     repository.share_loading = false;
                 });
         },
+        resetSelection: function() {
+            this.selected = {
+                repository: {},
+                versions: [],
+                entrypoints: [],
+                version: false,
+                entrypoint: false
+            };
+        },
         share: function(repository) {
             var self = this;
             repository.share_loading = true;
@@ -67,6 +74,7 @@ var app = new Vue({
             }).then(function(response) {
                 repository.share_loading = false;
                 repository.is_shared = true;
+                repository.shared_version = self.selected.version;
             });
         },
         update: function(repository) {
@@ -77,6 +85,7 @@ var app = new Vue({
                 entrypoint: this.selected.entrypoint
             }).then(function(response) {
                 repository.share_loading = false;
+                repository.shared_version = self.selected.version;
             });
         },
         unshare: function(repository) {
