@@ -31,14 +31,16 @@ def add_repository(repository):
         current_username = session.get('user').get('login')
         github_repo = get_user_repository(current_username, repository)
         values = request.get_json()
-        repo = Repository(id = github_repo.get('id'), name = github_repo.get('name'), owner = current_username,
-            version = values.get('version'), entrypoint = values.get('entrypoint'))
-        db.session.add(repo)
-        db.session.commit()
+        try:
+            repo = Repository(id = github_repo.get('id'), name = github_repo.get('name'), owner = current_username,
+                              version = values.get('version'), entrypoint = values.get('entrypoint'))
+            db.session.add(repo)
+            db.session.commit()
+            result = True
+        except:
+            result = False
 
-        return jsonify({"success": True})
-
-    return jsonify({"success": False})
+    return jsonify({"success": result or False})
 
 
 @app.route('/unshare/<repository>', endpoint = 'unshare_repo')
@@ -46,11 +48,15 @@ def add_repository(repository):
 def remove_repository(repository):
     current_username = session.get('user').get('login')
     github_repo = get_user_repository(current_username, repository)
-    repo = Repository.query.get(github_repo.get('id'))
-    db.session.delete(repo)
-    db.session.commit()
+    try:
+        repo = Repository.query.get(github_repo.get('id'))
+        db.session.delete(repo)
+        db.session.commit()
+        result = True
+    except:
+        result = False
 
-    return jsonify({"success": True})
+    return jsonify({"success": result or False})
 
 
 @app.route('/repos/user_all', endpoint = 'ajax_repos_user_all')
