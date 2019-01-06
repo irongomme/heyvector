@@ -36,12 +36,11 @@
                         <div class="content">
                             <img class="right floated mini ui image" v-bind:src="repository.owner.avatar_url">
                             <div class="header">{{ repository.name }}</div>
-                            <div class="meta" v-if="repository.is_shared">
+                            <div class="meta">
                                 <div class="ui label">
-                                    {{ repository.shared_version }}
+                                    {{ repository.version }}
                                 </div>
                             </div>
-                            <div class="meta" v-if="!repository.is_shared">Not shared</div>
                             <div class="description">{{ repository.description }}</div>
                         </div>
                         <div class="extra content">
