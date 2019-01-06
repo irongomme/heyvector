@@ -11,6 +11,8 @@ class Repository(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     owner = db.Column(db.String(50), nullable=False)
+    version = db.Column(db.String(6), nullable=False)
+    entrypoint = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
         return '%s/%s' % (self.owner, self.name)

@@ -24,16 +24,21 @@ def contributions():
     return render_template('share.html')
 
 
-@app.route('/share/<repository>', endpoint = 'share_repo')
+@app.route('/share/<repository>', endpoint = 'share_repo', methods=['POST'])
 @login_required
 def add_repository(repository):
-    current_username = session.get('user').get('login')
-    github_repo = get_user_repository(current_username, repository)
-    repo = Repository(id = github_repo.get('id'), name = github_repo.get('name'), owner = current_username)
-    db.session.add(repo)
-    db.session.commit()
+    if request.method == "POST":
+        current_username = session.get('user').get('login')
+        github_repo = get_user_repository(current_username, repository)
+        values = request.get_json()
+        repo = Repository(id = github_repo.get('id'), name = github_repo.get('name'), owner = current_username,
+            version = values.get('version'), entrypoint = values.get('entrypoint'))
+        db.session.add(repo)
+        db.session.commit()
 
-    return redirect('share')
+        return jsonify({"success": True})
+
+    return jsonify({"success": False})
 
 
 @app.route('/unshare/<repository>', endpoint = 'unshare_repo')
